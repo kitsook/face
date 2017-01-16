@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 
 import detect
+import config
 
 def getLabels(a_dir):
     return [name for name in os.listdir(a_dir) if isdir(join(a_dir, name))]
@@ -32,9 +33,8 @@ def combineFaces(faces, w=100, h=100, numPerRow=5):
     return np.concatenate(row_img, axis=0)
 
 def extractFaces(a_dir, folder, levelFace=False):
-    faceCascade = cv2.CascadeClassifier("C:/opencv/sources/data/haarcascades/haarcascade_frontalface_alt.xml")
-    eyeCascade = cv2.CascadeClassifier("C:/opencv/sources/data/haarcascades/haarcascade_eye.xml")
-
+    faceCascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
+    eyeCascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
 
     the_path = join(a_dir, folder)
     result = []
@@ -52,7 +52,7 @@ def extractFaces(a_dir, folder, levelFace=False):
                 #result.append(image[y:y+h, x:x+w])
     return result
 
-def trainRecognizer(db_folder, trainSize=(100,100), showFaces=False, forceTrain=False):
+def trainRecognizer(db_folder, trainSize=config.DEFAULT_FACE_SIZE, showFaces=False, forceTrain=False):
     #recognizer = cv2.face.createLBPHFaceRecognizer()
     recognizer = cv2.face.createFisherFaceRecognizer()
     #recognizer = cv2.face.createEigenFaceRecognizer()
@@ -82,7 +82,8 @@ def trainRecognizer(db_folder, trainSize=(100,100), showFaces=False, forceTrain=
             cv2.imshow("faces", combineFaces(faces))
             cv2.waitKey(0)
 
-    cv2.destroyWindow("faces")
+    if showFaces:
+        cv2.destroyWindow("faces")
 
     recognizer.train(images, np.array(labels))
     for key in label_map:
@@ -92,10 +93,10 @@ def trainRecognizer(db_folder, trainSize=(100,100), showFaces=False, forceTrain=
 
     return recognizer
 
-def saveRecognizer(recognizer, filename='recognizer.out'):
+def saveRecognizer(recognizer, filename=config.RECOGNIZER_OUTPUT_FILE):
     recognizer.save(filename)
 
-def loadRecognizer(recognizer, filename='recognizer.out'):
+def loadRecognizer(recognizer, filename=config.RECOGNIZER_OUTPUT_FILE):
     try:
         recognizer.load(filename)
         return True
@@ -103,4 +104,4 @@ def loadRecognizer(recognizer, filename='recognizer.out'):
         return False
 
 if __name__ == '__main__':
-    recognizer = trainRecognizer('imgdb', showFaces=True, forceTrain=True)
+    recognizer = trainRecognizer('imgdb', showFaces=False, forceTrain=True)
