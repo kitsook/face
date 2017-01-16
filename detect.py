@@ -1,6 +1,7 @@
 import math
 import cv2
 import numpy as np
+import config
 
 # given an image with the dimensions of face and eyes, return the face in leveled position
 def levelFace(image, face):
@@ -61,8 +62,8 @@ if __name__ == '__main__':
     width = None
     height = None
 
-    faceCascade = cv2.CascadeClassifier("C:/opencv/sources/data/haarcascades/haarcascade_frontalface_default.xml")
-    eyeCascade = cv2.CascadeClassifier("C:/opencv/sources/data/haarcascades/haarcascade_eye.xml")
+    faceCascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
+    eyeCascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
 
 
     if width is None:
