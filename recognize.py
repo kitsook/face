@@ -12,8 +12,11 @@ def RecognizeFace(image, faceCascade, eyeCascade, faceSize, threshold):
 
     # If faces are found, try to recognize them
     for ((x, y, w, h), eyedim)  in faces:
-        #label, confidence = recognizer.predict(cv2.resize(gray[y:y+h, x:x+w], faceSize))
         label, confidence = recognizer.predict(cv2.resize(detect.levelFace(gray, ((x, y, w, h), eyedim)), faceSize))
+        # note that for some distributions of python-opencv, the predict function
+        # returns the label only.
+        #label = recognizer.predict(cv2.resize(detect.levelFace(gray, ((x, y, w, h), eyedim)), faceSize))
+        #confidence = -1
         if confidence < threshold:
             found_faces.append((label, confidence, (x, y, w, h)))
 
