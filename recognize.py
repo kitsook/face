@@ -2,6 +2,7 @@ import cv2
 
 import train
 import detect
+import config
 
 
 def RecognizeFace(image, faceCascade, eyeCascade, faceSize, threshold):
@@ -20,12 +21,12 @@ def RecognizeFace(image, faceCascade, eyeCascade, faceSize, threshold):
 
 
 if __name__ == '__main__':
-    faceCascade = cv2.CascadeClassifier("C:/opencv/sources/data/haarcascades/haarcascade_frontalface_default.xml")
-    eyeCascade = cv2.CascadeClassifier("C:/opencv/sources/data/haarcascades/haarcascade_eye.xml")
-    faceSize = (200, 200)
+    faceCascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
+    eyeCascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
+    faceSize = config.DEFAULT_FACE_SIZE
     threshold = 500
 
-    recognizer = train.trainRecognizer('imgdb', trainSize=faceSize, showFaces=True)
+    recognizer = train.trainRecognizer('imgdb', faceSize, showFaces=True)
 
     cv2.namedWindow("camera", 1)
     capture = cv2.VideoCapture(0)
