@@ -1,4 +1,4 @@
-#face
+# face
 
 An experiment with OpenCV 3.x face detection and recognition.  Note that you
 will need to install the corresponding `opencv_contrib` modules for the face
