@@ -36,3 +36,5 @@ recognizer and feeding webcam images to recognize faces found.
 Note that in order to speed up the process, the training result should run once
 and saved.  Subsequent running of the program can load the result instead of
 training the recognizer again.
+
+![photo](https://3.bp.blogspot.com/-algeXrYnjO0/WHMo9xn8BgI/AAAAAAAAHss/mnPIJYXLkJQjGyQW4CDdlDWmSm5P4igrwCLcB/s1600/face%2Brecognition.png "photo")
