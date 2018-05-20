@@ -20,7 +20,7 @@ pip install -r requirements.txt
 ## Face detection
 
 `detect.py` contains sample on running face detection on webcam attached to the
-computer. The  `levelFace` function tries to rotate the image so that the
+computer. The  `level_face` function tries to rotate the image so that the
 face detected is level (based on the eye positions).
 
 ## Face recognizer training
