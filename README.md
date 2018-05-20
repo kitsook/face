@@ -4,6 +4,19 @@ An experiment with OpenCV 3.x face detection and recognition.  Note that you
 will need to install the corresponding `opencv_contrib` modules for the face
 recognizer to work.
 
+## Environment setup
+
+Make sure you have `opencv` and `opencv_contrib` installed already. Then clone
+and setup the environment for `face`
+
+```
+git clone https://github.com/kitsook/face
+cd face
+virtualenv venv
+. venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Face detection
 
 `detect.py` contains sample on running face detection on webcam attached to the

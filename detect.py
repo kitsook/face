@@ -4,16 +4,16 @@ import numpy as np
 import config
 
 # given an image with the dimensions of face and eyes, return the face in leveled position
-def levelFace(image, face):
-    ((x, y, w, h), eyedim) = face
-    if len(eyedim) != 2:
+def level_face(image, face):
+    ((x, y, w, h), eye_dim) = face
+    if len(eye_dim) != 2:
         # only rotate the face if thre are two eyes found
         return image[y:y+h, x:x+w]
 
-    leftx = eyedim[0][0]
-    lefty = eyedim[0][1]
-    rightx = eyedim[1][0]
-    righty = eyedim[1][1]
+    leftx = eye_dim[0][0]
+    lefty = eye_dim[0][1]
+    rightx = eye_dim[1][0]
+    righty = eye_dim[1][1]
     if leftx > rightx:
         leftx, rightx = rightx, leftx
         lefty, righty = righty, lefty
@@ -28,7 +28,7 @@ def levelFace(image, face):
 
     return image[y:y+h, x:x+w]
 
-def detectFaces(image, faceCascade, eyeCascade=None, returnGray=True):
+def detect_faces(image, face_cascade, eye_cascade=None, return_gray=True):
     cas_rejectLevel = 1.3
     cas_levelWeight = 5
 
@@ -36,19 +36,19 @@ def detectFaces(image, faceCascade, eyeCascade=None, returnGray=True):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Detect faces
-    faces = faceCascade.detectMultiScale(gray, cas_rejectLevel, cas_levelWeight)
+    faces = face_cascade.detectMultiScale(gray, cas_rejectLevel, cas_levelWeight)
 
     # If faces are found
     result = []
     for (x, y, w, h) in faces:
         eyes = []
-        if eyeCascade != None:
+        if eye_cascade:
             roi_gray = gray[y:y+h, x:x+w]
-            eyes = eyeCascade.detectMultiScale(roi_gray)
+            eyes = eye_cascade.detectMultiScale(roi_gray)
 
         result.append(((x, y, w, h), eyes))
 
-    if returnGray:
+    if return_gray:
         return gray, result
     else:
         return image, result
@@ -62,8 +62,8 @@ if __name__ == '__main__':
     width = None
     height = None
 
-    faceCascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
-    eyeCascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
+    face_cascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
+    eye_cascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
 
 
     if width is None:
@@ -81,7 +81,7 @@ if __name__ == '__main__':
     while True:
         retval, img = capture.read()
 
-        image, face_dim = detectFaces(img, faceCascade, eyeCascade, False)
+        image, face_dim = detect_faces(img, face_cascade, eye_cascade, False)
         for ((x, y, w, h), eye_dim) in face_dim:
             cv2.rectangle(image, (x, y), (x+w, y+h), (255, 0, 0), 2)
             for (ex, ey, ew, eh) in eye_dim:
