@@ -1,22 +1,18 @@
 import cv2
 
-import train
-import detect
+from train import train_recognizer
+from detect import detect_faces, level_face
 import config
 
 
-def RecognizeFace(image, faceCascade, eyeCascade, faceSize, threshold):
+def recognize_face(recognizer, image, face_cascade, eye_cascade, face_size, threshold):
     found_faces = []
 
-    gray, faces = detect.detectFaces(image, faceCascade, eyeCascade, returnGray=1)
+    gray, faces = detect_faces(image, face_cascade, eye_cascade, return_gray=1)
 
     # If faces are found, try to recognize them
     for ((x, y, w, h), eyedim)  in faces:
-        label, confidence = recognizer.predict(cv2.resize(detect.levelFace(gray, ((x, y, w, h), eyedim)), faceSize))
-        # note that for some distributions of python-opencv, the predict function
-        # returns the label only.
-        #label = recognizer.predict(cv2.resize(detect.levelFace(gray, ((x, y, w, h), eyedim)), faceSize))
-        #confidence = -1
+        label, confidence = recognizer.predict(cv2.resize(level_face(gray, ((x, y, w, h), eyedim)), face_size))
         if confidence < threshold:
             found_faces.append((label, confidence, (x, y, w, h)))
 
@@ -24,12 +20,12 @@ def RecognizeFace(image, faceCascade, eyeCascade, faceSize, threshold):
 
 
 if __name__ == '__main__':
-    faceCascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
-    eyeCascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
-    faceSize = config.DEFAULT_FACE_SIZE
+    face_cascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
+    eye_cascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
+    face_size = config.DEFAULT_FACE_SIZE
     threshold = 500
 
-    recognizer = train.trainRecognizer('imgdb', faceSize, showFaces=True)
+    recognizer = train_recognizer('imgdb', face_size, show_faces=True)
 
     cv2.namedWindow("camera", 1)
     capture = cv2.VideoCapture(0)
@@ -37,7 +33,7 @@ if __name__ == '__main__':
     while True:
         retval, img = capture.read()
 
-        for (label, confidence, (x, y, w, h)) in RecognizeFace(img, faceCascade, eyeCascade, faceSize, threshold):
+        for (label, confidence, (x, y, w, h)) in recognize_face(recognizer, img, face_cascade, eye_cascade, face_size, threshold):
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
             cv2.putText(img, "{} = {}".format(recognizer.getLabelInfo(label), int(confidence)), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0,255,0), 1, cv2.LINE_AA)
 
