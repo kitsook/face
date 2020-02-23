@@ -43,6 +43,7 @@ def train_recognizer(db_folder, train_size=config.DEFAULT_FACE_SIZE, show_faces=
         if show_faces:
             cv2.namedWindow("faces", 1)
             cv2.imshow("faces", _combine_faces(faces))
+            print("Press any key to continue...")
             cv2.waitKey(0)
 
     if show_faces:
@@ -111,4 +112,4 @@ def _load_recognizer(recognizer, filename=config.RECOGNIZER_OUTPUT_FILE):
         return False
 
 if __name__ == '__main__':
-    recognizer = train_recognizer('imgdb', show_faces=False, force_train=True)
+    recognizer = train_recognizer('imgdb', show_faces=True, force_train=True)
