@@ -12,16 +12,18 @@ def recognize_face(recognizer, image, face_cascade, eye_cascade, face_size, thre
 
     # If faces are found, try to recognize them
     for ((x, y, w, h), eyedim)  in faces:
-        label, confidence = recognizer.predict(cv2.resize(level_face(gray, ((x, y, w, h), eyedim)), face_size))
-        if confidence < threshold:
-            found_faces.append((label, confidence, (x, y, w, h)))
+        label, distance = recognizer.predict(cv2.resize(level_face(gray, ((x, y, w, h), eyedim)), face_size))
+        if distance < threshold:
+            found_faces.append((label, distance, (x, y, w, h)))
 
     return found_faces
 
 
 if __name__ == '__main__':
     face_cascade = cv2.CascadeClassifier(config.FACE_CASCADE_FILE)
-    eye_cascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
+    # no need to detect eyes location
+    # eye_cascade = cv2.CascadeClassifier(config.EYE_CASCADE_FILE)
+    eye_cascade = None
     face_size = config.DEFAULT_FACE_SIZE
     threshold = 500
 
@@ -32,12 +34,12 @@ if __name__ == '__main__':
 
     while True:
         retval, img = capture.read()
+        if retval:
+            for (label, distance, (x, y, w, h)) in recognize_face(recognizer, img, face_cascade, eye_cascade, face_size, threshold):
+                cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                cv2.putText(img, "{} (d={})".format(recognizer.getLabelInfo(label), int(distance)), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0,255,0), 1, cv2.LINE_AA)
 
-        for (label, confidence, (x, y, w, h)) in recognize_face(recognizer, img, face_cascade, eye_cascade, face_size, threshold):
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-            cv2.putText(img, "{} = {}".format(recognizer.getLabelInfo(label), int(confidence)), (x, y), cv2.FONT_HERSHEY_PLAIN, 1, (0,255,0), 1, cv2.LINE_AA)
-
-        cv2.imshow("camera", img)
+            cv2.imshow("camera", img)
 
         if cv2.waitKey(30) & 0xFF == ord('q'):
             break

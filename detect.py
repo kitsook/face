@@ -29,14 +29,14 @@ def level_face(image, face):
     return image[y:y+h, x:x+w]
 
 def detect_faces(image, face_cascade, eye_cascade=None, return_gray=True):
-    cas_rejectLevel = 1.3
-    cas_levelWeight = 5
+    scale_factor = 1.3
+    min_neighbors = 3
 
     # Convert color input image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Detect faces
-    faces = face_cascade.detectMultiScale(gray, cas_rejectLevel, cas_levelWeight)
+    faces = face_cascade.detectMultiScale(gray, scale_factor, min_neighbors)
 
     # If faces are found
     result = []
@@ -44,7 +44,7 @@ def detect_faces(image, face_cascade, eye_cascade=None, return_gray=True):
         eyes = []
         if eye_cascade:
             roi_gray = gray[y:y+h, x:x+w]
-            eyes = eye_cascade.detectMultiScale(roi_gray)
+            eyes = eye_cascade.detectMultiScale(roi_gray)[:2]
 
         result.append(((x, y, w, h), eyes))
 
