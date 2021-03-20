@@ -1,16 +1,11 @@
 # face
 
-An experiment with OpenCV 3.x face detection and recognition.  Note that you
-will need to install the corresponding `opencv_contrib` modules for the face
-recognizer to work.
+An experiment with OpenCV face detection and recognition.
 
-## Environment setup
-
-Make sure you have `opencv` and `opencv_contrib` installed already. Then clone
-and setup the environment for `face`
+## Setup
 
 ```
-git clone https://github.com/kitsook/face
+git clone https://github.com/kitsook/face.git
 cd face
 virtualenv venv
 . venv/bin/activate
