@@ -22,7 +22,7 @@ def level_face(image, face):
 
     rotDeg = math.degrees(math.atan((righty - lefty) / float(rightx - leftx)))
     if abs(rotDeg) < 20:
-        rotMat = cv2.getRotationMatrix2D((leftx, lefty), rotDeg, 1)
+        rotMat = cv2.getRotationMatrix2D((int(leftx), int(lefty)), rotDeg, 1)
         rotImg = cv2.warpAffine(image, rotMat, (image.shape[1], image.shape[0]))
         return rotImg[y:y+h, x:x+w]
 
