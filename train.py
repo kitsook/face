@@ -1,6 +1,5 @@
 import os
 from os.path import join, isdir
-from PIL import Image
 
 import cv2
 import numpy as np
