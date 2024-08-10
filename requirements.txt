@@ -1,5 +1,5 @@
-numpy==1.26.0
+numpy==2.0.1
 # must install opencv-python before opencv-contrib-python
-opencv-python==4.8.1.78
-opencv-contrib-python==4.8.1.78
-Pillow==10.1.0
+opencv-python==4.10.0.84
+opencv-contrib-python==4.10.0.84
+Pillow==10.4.0
